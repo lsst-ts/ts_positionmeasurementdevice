@@ -8,5 +8,32 @@ properties:
     description: The interval at which telemetry is published
     type: number
     default: 1
-required: [telemetry_interval]
+  devices:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+          default: "Dial Gage"
+      required: [name]
+    minItems: 1
+    maxItems: 8
+  units:
+    type: string
+    default: "um"
+  kind:
+    type: string
+    default: "micrometers"
+  location:
+    type: string
+    default: "Office"
+  serial_port:
+    type: string
+    default: "/dev/ttyUSB0"
+  hub_type:
+    type: string
+    enum: ["Mitutoyo"]
+    default: "Mitutoyo"
+required: [telemetry_interval, devices, units, kind,  location, serial_port, hub_type]
 additionalProperties: false

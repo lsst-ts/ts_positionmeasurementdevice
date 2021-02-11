@@ -5,27 +5,34 @@ import asyncio
 
 from lsst.ts import salobj
 
-from .component import PMDComponent
+from .component import MitutoyoComponent
 
 
 class PMDCsc(salobj.ConfigurableCsc):
-    """The CSC for the PMD.
+    """The CSC for the Position Measurement Device.
 
     Parameters
     ----------
-    index
-    simulation_mode
-    initial_state
-    config_dir
+    index : `int`
+        The index of the CSC.
+    simulation_mode : `int`
+        Whether the CSC is in simulation mode.
+    initial_state : `lsst.ts.salobj.State`
+        The initial_state of the CSC.
+    config_dir : `pathlib.Path`
+        The path of the configuration directory.
 
     Attributes
     ----------
-    telemetry_task
-    telemetry_interval
-    component
+    telemetry_task : `asyncio.Future`
+        The task for running the telemetry loop.
+    telemetry_interval : `float`
+        The interval that telemetry is published at.
+    component : `MituyoyoComponent`
+        The component for the PMD.
     """
 
-    valid_simulation_modes = [0]
+    valid_simulation_modes = (0, 1)
     """The valid simulation modes for the PMD."""
 
     def __init__(
@@ -34,6 +41,7 @@ class PMDCsc(salobj.ConfigurableCsc):
         simulation_mode=0,
         initial_state=salobj.State.STANDBY,
         config_dir=None,
+        settings_to_apply="",
     ):
         schema_path = pathlib.Path(__file__).parents[4].joinpath("schema", "PMD.yaml")
 
@@ -44,28 +52,47 @@ class PMDCsc(salobj.ConfigurableCsc):
             initial_state=initial_state,
             simulation_mode=simulation_mode,
             schema_path=schema_path,
+            settings_to_apply=settings_to_apply,
         )
         self.telemetry_task = salobj.make_done_future()
         self.telemetry_interval = 1
         self.component = None
 
     async def configure(self, config):
-        """Configure the CSC."""
+        """Configure the CSC.
+
+        Parameters
+        ----------
+        config : `types.Simplenamespace`
+            The configuration object.
+        """
         self.telemetry_interval = config.telemetry_interval
+        if config.hub_type == "Mitutoyo":
+            self.component = MitutoyoComponent(self.simulation_mode)
+        self.component.configure(config)
+        self.evt_metadata.set_put(
+            kind=self.component.kind,
+            location=self.component.location,
+            names=self.component.names,
+            units=self.component.units,
+        )
 
     async def telemetry(self):
         """Execute the telemetry loop."""
-        while True:
-            self.log.debug("Begin sending telemetry")
-            self.component.get_position()
-            self.tel_position.set_put(position=self.component.position)
-            await asyncio.sleep(self.telemetry_interval)
+        try:
+            while True:
+                self.log.debug("Begin sending telemetry")
+                self.component.get_slots_value()
+                self.tel_position.set_put(position=self.component.position)
+                await asyncio.sleep(self.telemetry_interval)
+        except asyncio.CancelledError:
+            self.log.info("Telemetry loop cancelled")
+        except Exception:
+            self.log.exception("Telemetry loop failed")
 
     async def handle_summary_state(self):
         """Handle the summary states."""
         if self.disabled_or_enabled:
-            if self.component is None:
-                self.component = PMDComponent(self.simulation_mode)
             if not self.component.connected:
                 self.component.connect()
             if self.telemetry_task.done():

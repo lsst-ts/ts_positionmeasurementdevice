@@ -3,7 +3,7 @@ ts_positionmeasurementdevice
 ############################
 
 PositionMeasurementDevice is a Commandable SAL Component for the `Vera C. Rubin Observatory <https://lsst.org>`_.
-It controls devices that measure relative position displacement over a period of time.
+It controls devices that measure position displacement over a period of time.
 
 Installation
 ============

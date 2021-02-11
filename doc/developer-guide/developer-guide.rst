@@ -17,8 +17,6 @@ Dependencies
 * `SAL <https://ts-sal.lsst.io>`_ - v4.0.0
 * ts_salobj - v6.x
 
-.. Linking to the previous versions may also be worthwhile, depending on the CSC
-
 .. _API:
 
 PMD API

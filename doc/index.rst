@@ -1,46 +1,3 @@
-..
-  This is a template for documentation that will accompany each CSC.
-  It consists of a user guide and development guide, however, cross linking between the guides is expected.
-  This template is provided to ensure that the documentation remains similar in look, feel, and contents to users.
-  The headings below are expected to be present for all CSCs, but for many CSCs, additional fields will be required.
-  An example case can be found at https://ts-athexapod.lsst.io/v/develop/
-
-  ** All text in square brackets [] must be re-populated accordingly **
-
-  See https://developer.lsst.io/restructuredtext/style.html
-  for a guide to reStructuredText writing.
-
-  Use the following syntax for sections:
-
-  Sections
-  ========
-
-  and
-
-  Subsections
-  -----------
-
-  and
-
-  Subsubsections
-  ^^^^^^^^^^^^^^
-
-  To add images, add the image file (png, svg or jpeg preferred) to the
-  images/ directory. The reST syntax for adding the image is
-
-  .. figure:: /images/filename.ext
-   :name: fig-label
-
-  Caption text.
-
-  Feel free to delete this instructional comment.
-
-.. Fill out data so contacts section below is auto-populated
-.. |CSC_developer| replace::  *Replace-with-name-and-email*
-.. |CSC_product_owner| replace:: *Replace-with-name-and-email*
-
-.. Note that the "ts_" prefix is omitted from the title
-
 ###
 PMD
 ###
@@ -79,11 +36,6 @@ Example information may be link(s) to the higher-level classes which may be used
 User Documentation
 ==================
 
-.. This template has the user documentation in a subfolder.
-.. However, in cases where the user documentation is extremely short (<50 lines), one may move that content here and remove the subfolder.
-.. This will require modification of the heading styles and possibly renaming of the labels.
-.. If the content becomes too large, then it must be moved back to a subfolder and reformatted appropriately.
-
 User-level documentation, found at the link below, is aimed at personnel looking to perform the standard use-cases/operations with the PMD.
 
 .. toctree::
@@ -93,9 +45,7 @@ User-level documentation, found at the link below, is aimed at personnel looking
 .. _Configuration:
 
 Configuring the PMD
-=========================================
-.. For CSCs where configuration is not required, this section can contain a single sentence stating so.
-   More introductory information can also be added here (e.g. CSC XYZ requires both a configuration file containing parameters as well as several look-up tables to be operational).
+===================
 
 The configuration for the PMD is described at the following link.
 
@@ -109,11 +59,6 @@ The configuration for the PMD is described at the following link.
 Development Documentation
 =========================
 
-.. This template has the user documentation in a subfolder.
-.. However, in cases where the user documentation is extremely short (<50 lines), one may move that content here and remove the subfolder.
-.. This will require modification of the heading styles and possibly renaming of the labels.
-.. If the content becomes too large, then it must be moved back to a subfolder and reformatted appropriately.
-
 This area of documentation focuses on the classes used, API's, and how to participate to the development of the PMD software packages.
 
 .. toctree::
@@ -124,11 +69,6 @@ This area of documentation focuses on the classes used, API's, and how to partic
 
 Version History
 ===============
-
-.. At the time of writing the Version history/release notes are not yet standardized amongst CSCs.
-.. Until then, it is not expected that both a version history and a release_notes be maintained.
-.. It is expected that each CSC link to whatever method of tracking is being used for that CSC until standardization occurs.
-.. No new work should be required in order to complete this section.
 
 The version history of the PMD is found at the following link.
 
