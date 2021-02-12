@@ -68,14 +68,14 @@ class MockMitutoyoHub:
         self.slot_7_position = math.nan
         self.slot_8_position = math.nan
         self.commands = {
-            "1": self.get_slot_1_position,
-            "2": self.get_slot_2_position,
-            "3": self.get_slot_3_position,
-            "4": self.get_slot_4_position,
-            "5": self.get_slot_5_position,
-            "6": self.get_slot_6_position,
-            "7": self.get_slot_7_position,
-            "8": self.get_slot_8_position,
+            "1": self.get_position,
+            "2": self.get_position,
+            "3": self.get_position,
+            "4": self.get_position,
+            "5": self.get_position,
+            "6": self.get_position,
+            "7": self.get_position,
+            "8": self.get_position,
         }
         self.log = logging.getLogger(__name__)
 
@@ -84,53 +84,15 @@ class MockMitutoyoHub:
         msg = msg.decode().rstrip("\r\n")
         self.log.info(msg)
         if msg in self.commands.keys():
-            reply = self.commands[msg]()
+            reply = self.commands[msg](msg)
             if reply is not None:
                 self.log.info(reply)
                 return reply
         raise NotImplementedError(f"{msg} not implemented.")
 
-    def get_slot_1_position(self):
-        return f"1:{self.slot_1_position:+f}\r"
-
-    def get_slot_2_position(self):
-        if not math.isnan(self.slot_2_position):
-            return f"2:{self.slot_2_position:+f}\r"
-        else:
-            return "\r"
-
-    def get_slot_3_position(self):
-        if not math.isnan(self.slot_3_position):
-            return f"3:{self.slot_3_position:+f}\r"
-        else:
-            return "\r"
-
-    def get_slot_4_position(self):
-        if not math.isnan(self.slot_4_position):
-            return f"4:{self.slot_4_position:+f}\r"
-        else:
-            return "\r"
-
-    def get_slot_5_position(self):
-        if not math.isnan(self.slot_5_position):
-            return f"5:{self.slot_5_position:+f}\r"
-        else:
-            return "\r"
-
-    def get_slot_6_position(self):
-        if not math.isnan(self.slot_6_position):
-            return f"6:{self.slot_6_position:+f}\r"
-        else:
-            return "\r"
-
-    def get_slot_7_position(self):
-        if not math.isnan(self.slot_7_position):
-            return f"7:{self.slot_7_position:+f}\r"
-        else:
-            return "\r"
-
-    def get_slot_8_position(self):
-        if not math.isnan(self.slot_8_position):
-            return f"8:{self.slot_8_position:+f}\r"
+    def get_position(self, index):
+        slot_position = getattr(self, f"slot_{index}_position")
+        if not math.isnan(slot_position):
+            return f"{index}:{slot_position:+f}\r"
         else:
             return "\r"
