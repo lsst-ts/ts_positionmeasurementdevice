@@ -65,14 +65,14 @@ class MitutoyoComponent:
         config : `types.Simplenamespace`
             The configuration object.
         """
-        for device in config.devices:
-            self.names += device["name"] + ","
+        for device in config["devices"]:
+            self.names += device + ","
             self.free_slots -= 1
         for slot in range(self.free_slots):
             self.names += ","
-        self.kind = config.kind
-        self.units = config.units
-        self.location = config.location
+        self.hub_type = config["hub_type"]
+        self.units = config["units"]
+        self.location = config["location"]
 
     def send_msg(self, msg):
         self.commander.write(f"{msg}\r".encode())

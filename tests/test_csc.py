@@ -60,7 +60,7 @@ class PMDCscTestCase(asynctest.TestCase, salobj.BaseCscTestCase):
         ):
             await self.assert_next_sample(
                 topic=self.remote.evt_metadata,
-                kind="Micrometer",
+                hubType="Mitutoyo",
                 location="Office",
                 names="Dial Gage,,,,,,,",
                 units="um",

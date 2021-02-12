@@ -56,6 +56,7 @@ class PMDCsc(salobj.ConfigurableCsc):
         )
         self.telemetry_task = salobj.make_done_future()
         self.telemetry_interval = 1
+        self.index = index
         self.component = None
 
     async def configure(self, config):
@@ -66,12 +67,14 @@ class PMDCsc(salobj.ConfigurableCsc):
         config : `types.Simplenamespace`
             The configuration object.
         """
-        self.telemetry_interval = config.telemetry_interval
-        if config.hub_type == "Mitutoyo":
+        self.telemetry_interval = config.hub_config[self.index - 1][
+            "telemetry_interval"
+        ]
+        if config.hub_config[self.index - 1]["hub_type"] == "Mitutoyo":
             self.component = MitutoyoComponent(self.simulation_mode)
-        self.component.configure(config)
+        self.component.configure(config.hub_config[self.index - 1])
         self.evt_metadata.set_put(
-            kind=self.component.kind,
+            hubType=self.component.hub_type,
             location=self.component.location,
             names=self.component.names,
             units=self.component.units,

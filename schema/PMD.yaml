@@ -1,39 +1,43 @@
 $schema: http://json-schema.org/draft-07/schema#
-$id: https://github.com/lsst-ts/ts_positionmeasurementdevice/blob/master/schema/PositionMeasurementDevice.yaml
-title: PositionMeasurementDevice v1
-description: Schema for PositionMeasurementDevice configuration files
+$id: https://github.com/lsst-ts/ts_pmd/blob/master/schema/PMDevice.yaml
+title: PMD v1
+description: Schema for PMD configuration files
+definitions:
+  hub_specific_schema:
+    type: object
+    properties:
+      sal_index:
+        type: number
+      telemetry_interval:
+        description: The interval at which telemetry is published
+        type: number
+        default: 1
+      devices:
+        type: array
+        items:
+          type: string
+        minItems: 1
+        maxItems: 8
+      units:
+        type: string
+        default: "um"
+      location:
+        type: string
+        default: "Office"
+      serial_port:
+        type: string
+        default: "/dev/ttyUSB0"
+      hub_type:
+        type: string
+        enum: ["Mitutoyo"]
+        default: "Mitutoyo"
+    required: [telemetry_interval, devices, units,  location, serial_port, hub_type]
+    additionalProperties: false
 type: object
 properties:
-  telemetry_interval:
-    description: The interval at which telemetry is published
-    type: number
-    default: 1
-  devices:
+  hub_config:
     type: array
     items:
-      type: object
-      properties:
-        name:
-          type: string
-          default: "Dial Gage"
-      required: [name]
-    minItems: 1
-    maxItems: 8
-  units:
-    type: string
-    default: "um"
-  kind:
-    type: string
-    default: "micrometers"
-  location:
-    type: string
-    default: "Office"
-  serial_port:
-    type: string
-    default: "/dev/ttyUSB0"
-  hub_type:
-    type: string
-    enum: ["Mitutoyo"]
-    default: "Mitutoyo"
-required: [telemetry_interval, devices, units, kind,  location, serial_port, hub_type]
-additionalProperties: false
+      "$ref": "#/definitions/hub_specific_schema"
+required: [hub_config]
+additional_properties: false
