@@ -8,27 +8,34 @@ definitions:
     properties:
       sal_index:
         type: number
+        minValue: 1
+        description: The SAL Component index.
       telemetry_interval:
-        description: The interval at which telemetry is published
+        description: The interval at which telemetry is published.
         type: number
         default: 1
       devices:
         type: array
+        description: Names of the devices.
         items:
           type: string
         minItems: 1
         maxItems: 8
       units:
         type: string
+        description: Units of measurement for the devices and the unit should be a valid astropy.units string.
         default: "um"
       location:
         type: string
+        description: The location of the device.
         default: "Office"
       serial_port:
         type: string
+        description: The serial_port that the device is connected to.
         default: "/dev/ttyUSB0"
       hub_type:
         type: string
+        description: The brand/type of device hub.
         enum: ["Mitutoyo"]
         default: "Mitutoyo"
     required: [telemetry_interval, devices, units,  location, serial_port, hub_type]

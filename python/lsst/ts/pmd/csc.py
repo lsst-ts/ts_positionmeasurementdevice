@@ -67,6 +67,7 @@ class PMDCsc(salobj.ConfigurableCsc):
         config : `types.Simplenamespace`
             The configuration object.
         """
+        self.log.info(config)
         self.telemetry_interval = config.hub_config[self.index - 1][
             "telemetry_interval"
         ]
@@ -76,7 +77,7 @@ class PMDCsc(salobj.ConfigurableCsc):
         self.evt_metadata.set_put(
             hubType=self.component.hub_type,
             location=self.component.location,
-            names=self.component.names,
+            names=",".join(self.component.names),
             units=self.component.units,
         )
 
@@ -85,8 +86,8 @@ class PMDCsc(salobj.ConfigurableCsc):
         try:
             while True:
                 self.log.debug("Begin sending telemetry")
-                self.component.get_slots_value()
-                self.tel_position.set_put(position=self.component.position)
+                position = self.component.get_slots_position()
+                self.tel_position.set_put(position=position)
                 await asyncio.sleep(self.telemetry_interval)
         except asyncio.CancelledError:
             self.log.info("Telemetry loop cancelled")
