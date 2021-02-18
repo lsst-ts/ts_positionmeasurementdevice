@@ -24,10 +24,6 @@ Overview
 
 :ref:`Find the Developer and Product Owner <ts_xml:index:master-csc-table:PMD>`.
 
-[This section is to present an overview of the CSC.
-This should include a top-level description of the primary use-case(s) as well as any pertinent information.
-Example information may be link(s) to the higher-level classes which may be used to operate it, or mention of other CSCs (with links) that it operates in concert with.]
-
 .. note:: If you are interested in viewing other branches of this repository append a `/v` to the end of the url link. For example `https://ts-pmd.lsst.io/v/`
 
 
