@@ -38,7 +38,20 @@ class ValidationTestCase(unittest.TestCase):
             self.assertEqual(result[field], value)
 
     def test_invalid_configs(self):
-        data = {
+        good_data = {
+            "hub_config": [
+                {
+                    "sal_index": 1,
+                    "telemetry_interval": 1,
+                    "devices": ["Dial Gage"],
+                    "units": "um",
+                    "location": "Office",
+                    "serial_port": "/dev/ttyUSB0",
+                    "hub_type": "Mitutoyo",
+                }
+            ]
+        }
+        bad_hub_items = {
             "hub_config": [
                 {
                     "sal_index": 0,
@@ -51,8 +64,11 @@ class ValidationTestCase(unittest.TestCase):
                 }
             ]
         }
-        with self.assertRaises(jsonschema.exceptions.ValidationError):
-            self.validator.validate(data)
+        for name, bad_value in bad_hub_items.items():
+            bad_data = good_data.copy()
+            bad_data["hub_config"][0][name] = bad_value
+            with self.assertRaises(jsonschema.exceptions.ValidationError):
+                self.validator.validate(bad_data)
 
 
 if __name__ == "__main__":

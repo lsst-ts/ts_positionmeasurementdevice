@@ -65,6 +65,7 @@ pipeline {
                     sh """
                         source /home/saluser/.setup_dev.sh || echo loading env failed. Continuing...
                         setup -k -r .
+                        pip install pyserial
                         pytest --cov-report html --cov=${env.MODULE_NAME} --junitxml=${env.XML_REPORT}
                     """
                 }
@@ -72,14 +73,16 @@ pipeline {
         }
         stage('Build and Upload Documentation') {
             steps {
-                withEnv(["HOME=${env.WORKSPACE}"]) {
-                    sh """
-                        source /home/saluser/.setup_dev.sh || echo loading env failed. Continuing...
-                        pip install .
-                        pip install -r doc/requirements.txt
-                        package-docs build
-                        ltd upload --product ts-pmd --git-ref ${GIT_BRANCH} --dir doc/_build/html
-                    """
+                catchError(buildResult: 'SUCCESS', stageResult: 'UNSTABLE') {
+                    withEnv(["HOME=${env.WORKSPACE}"]) {
+                        sh """
+                            source /home/saluser/.setup_dev.sh || echo loading env failed. Continuing...
+                            pip install .
+                            pip install -r doc/requirements.txt
+                            package-docs build
+                            ltd upload --product ts-pmd --git-ref ${GIT_BRANCH} --dir doc/_build/html
+                        """
+                    }
                 }
             }
         }

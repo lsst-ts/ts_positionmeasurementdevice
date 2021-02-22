@@ -42,7 +42,6 @@ class PMDCscTestCase(asynctest.TestCase, salobj.BaseCscTestCase):
             settings_to_apply="micrometer",
         ):
             position = await self.remote.tel_position.aget()
-            # raise Exception("Intentional Failure")
             self.assertTrue(not math.isnan(position.position[0]))
             self.assertTrue(math.isnan(position.position[1]))
             self.assertTrue(math.isnan(position.position[2]))

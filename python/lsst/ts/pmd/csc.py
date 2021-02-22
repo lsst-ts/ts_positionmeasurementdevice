@@ -1,3 +1,24 @@
+# This file is part of ts_pmd.
+#
+# Developed for the Vera Rubin Telescope and Site Project.
+# This product includes software developed by the LSST Project
+# (https://www.lsst.org).
+# See the COPYRIGHT file at the top-level directory of this distribution
+# for details of code ownership.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 __all__ = ["PMDCsc"]
 
 import pathlib
@@ -27,7 +48,7 @@ class PMDCsc(salobj.ConfigurableCsc):
     telemetry_task : `asyncio.Future`
         The task for running the telemetry loop.
     telemetry_interval : `float`
-        The interval that telemetry is published at.
+        The interval that telemetry is published at. (Seconds)
     component : `MituyoyoComponent`
         The component for the PMD.
     """
@@ -102,10 +123,10 @@ class PMDCsc(salobj.ConfigurableCsc):
             if self.telemetry_task.done():
                 self.telemetry_task = asyncio.create_task(self.telemetry())
         else:
+            self.telemetry_task.cancel()
             if self.component is not None:
                 self.component.disconnect()
                 self.component = None
-            self.telemetry_task.cancel()
 
     async def close_tasks(self):
         """Close the CSC for cleanup."""

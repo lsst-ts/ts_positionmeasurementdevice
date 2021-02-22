@@ -1,8 +1,8 @@
-############################
-ts_positionmeasurementdevice
-############################
+######
+ts_pmd
+######
 
-PositionMeasurementDevice is a Commandable SAL Component for the `Vera C. Rubin Observatory <https://lsst.org>`_.
+PMD is a Commandable SAL Component for the `Vera C. Rubin Observatory <https://lsst.org>`_.
 It controls devices that measure position displacement over a period of time.
 
 Installation

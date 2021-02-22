@@ -1,3 +1,24 @@
+# This file is part of ts_pmd.
+#
+# Developed for the Vera Rubin Telescope and Site Project.
+# This product includes software developed by the LSST Project
+# (https://www.lsst.org).
+# See the COPYRIGHT file at the top-level directory of this distribution
+# for details of code ownership.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 __all__ = ["MitutoyoComponent"]
 
 import math
@@ -30,16 +51,6 @@ class MitutoyoComponent:
     """
 
     def __init__(self, simulation_mode):
-        self.position = [
-            math.nan,
-            math.nan,
-            math.nan,
-            math.nan,
-            math.nan,
-            math.nan,
-            math.nan,
-            math.nan,
-        ]
         self.connected = False
         self.simulation_mode = bool(simulation_mode)
         self.names = ["", "", "", "", "", "", "", ""]
@@ -73,6 +84,25 @@ class MitutoyoComponent:
         self.location = config["location"]
 
     def send_msg(self, msg):
+        """Send a message to the device.
+
+        Parameters
+        ----------
+        msg : `str`
+            The message to send.
+
+        Raises
+        ------
+        Exception
+            Raised when the device is not connected.
+
+        Returns
+        -------
+        reply : `bytes`
+            The reply from the device.
+        """
+        if not self.connected:
+            raise Exception("Not connected")
         self.commander.write(f"{msg}\r".encode())
         try:
             reply = self.commander.read_until(b"\r")
@@ -82,6 +112,20 @@ class MitutoyoComponent:
             return reply
 
     def get_slots_position(self):
+        """Get all device slot positions.
+
+        Raises
+        ------
+        Exception
+            Raised when the device is not connected.
+
+        Returns
+        -------
+        position : `list` of `float`
+            An array of values from the devices.
+        """
+        if not self.connected:
+            raise Exception("Not connected")
         position = [
             math.nan,
             math.nan,

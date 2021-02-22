@@ -11,7 +11,7 @@ definitions:
         minValue: 1
         description: The SAL Component index.
       telemetry_interval:
-        description: The interval at which telemetry is published.
+        description: The interval at which telemetry is published. (Seconds)
         type: number
         default: 1
       devices:
