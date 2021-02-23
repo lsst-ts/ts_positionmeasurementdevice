@@ -1,4 +1,4 @@
-.. _Version_History:
+.. _version_history:Version_History:
 
 ===============
 Version History

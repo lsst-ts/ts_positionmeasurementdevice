@@ -1,15 +1,13 @@
 """Sphinx configuration file for TSSW package"""
 
-from documenteer.sphinxconfig.stackconf import build_package_configs
-import lsst.ts.pmd
+from documenteer.conf.pipelinespkg import *  # noqa
 
 
-_g = globals()
-_g.update(
-    build_package_configs(
-        project_name="ts_pmd", version=lsst.ts.pmd.version.__version__,
-    )
-)
+project = "ts_pmd"  # noqa
+html_theme_options["logotext"] = project  # noqa
+html_title = project  # noqa
+doxylink = {}
+html_short_title = project  # noqa
 
 intersphinx_mapping["ts_xml"] = ("https://ts-xml.lsst.io", None)  # noqa
 intersphinx_mapping["ts_salobj"] = ("https://ts-salobj.lsst.io", None)  # noqa

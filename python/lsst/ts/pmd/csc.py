@@ -49,7 +49,7 @@ class PMDCsc(salobj.ConfigurableCsc):
         The task for running the telemetry loop.
     telemetry_interval : `float`
         The interval that telemetry is published at. (Seconds)
-    component : `MituyoyoComponent`
+    component : `MitutoyoComponent`
         The component for the PMD.
     """
 
