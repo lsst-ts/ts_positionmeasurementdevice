@@ -1,6 +1,5 @@
 import setuptools
 import pathlib
-import os
 import sys
 
 setup_reqs = ["setuptools_scm"]
@@ -27,7 +26,6 @@ setuptools.setup(
     packages=setuptools.find_namespace_packages(where="python"),
     package_dir={"": "python"},
     package_data={"": ["*.rst", "*.yaml"]},
-    data_files=[(os.path.join(data_files_path, "schema"), ["schema/PMD.yaml"],)],
     scripts=["bin/run_pmd.py"],
     tests_require=test_reqs,
     license="GPL",

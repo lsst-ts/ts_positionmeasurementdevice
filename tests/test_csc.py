@@ -1,11 +1,10 @@
-import asynctest
 import unittest
 import math
 
 from lsst.ts import salobj, pmd
 
 
-class PMDCscTestCase(asynctest.TestCase, salobj.BaseCscTestCase):
+class PMDCscTestCase(unittest.IsolatedAsyncioTestCase, salobj.BaseCscTestCase):
     def basic_make_csc(
         self,
         index,

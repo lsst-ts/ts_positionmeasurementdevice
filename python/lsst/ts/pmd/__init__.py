@@ -27,3 +27,4 @@ except ImportError:
 from .csc import *
 from .component import *
 from .mock_server import *
+from .config_schema import *
