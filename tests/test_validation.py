@@ -1,20 +1,14 @@
 import unittest
-import pathlib
+from lsst.ts.pmd.config_schema import CONFIG_SCHEMA
 
 import jsonschema
-import yaml
 
 from lsst.ts import salobj
 
 
 class ValidationTestCase(unittest.TestCase):
     def setUp(self):
-        schemaname = "PMD.yaml"
-        pkg_dir = pathlib.Path(__file__).parents[1]
-        schemapath = pkg_dir / "schema" / schemaname
-        with open(schemapath, "r") as f:
-            rawschema = f.read()
-        self.schema = yaml.safe_load(rawschema)
+        self.schema = CONFIG_SCHEMA
         self.validator = salobj.DefaultingValidator(schema=self.schema)
 
     def test_all_specified(self):

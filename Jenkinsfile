@@ -65,6 +65,7 @@ pipeline {
                     sh """
                         source /home/saluser/.setup_dev.sh || echo loading env failed. Continuing...
                         setup -k -r .
+                        pip install .
                         pip install pyserial
                         pytest --cov-report html --cov=${env.MODULE_NAME} --junitxml=${env.XML_REPORT}
                     """

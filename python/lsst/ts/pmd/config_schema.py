@@ -1,3 +1,10 @@
+__all__ = ["CONFIG_SCHEMA"]
+
+import yaml
+
+
+CONFIG_SCHEMA = yaml.safe_load(
+    """
 $schema: http://json-schema.org/draft-07/schema#
 $id: https://github.com/lsst-ts/ts_pmd/blob/master/schema/PMDevice.yaml
 title: PMD v1
@@ -48,3 +55,5 @@ properties:
       "$ref": "#/definitions/hub_specific_schema"
 required: [hub_config]
 additional_properties: false
+"""
+)
