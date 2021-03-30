@@ -30,7 +30,9 @@ class PMDCscTestCase(unittest.IsolatedAsyncioTestCase, salobj.BaseCscTestCase):
 
     async def test_bin_script(self):
         await self.check_bin_script(
-            name="PMD", exe_name="run_pmd.py", index=1,
+            name="PMD",
+            exe_name="run_pmd.py",
+            index=1,
         )
 
     async def test_telemetry(self):
