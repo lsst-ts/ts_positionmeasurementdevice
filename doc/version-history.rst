@@ -11,3 +11,4 @@ Version History
 * Added metadata event
 * Added Mitutoyo hub component
 * Added conda recipe
+* Upgrade to black 20.8
