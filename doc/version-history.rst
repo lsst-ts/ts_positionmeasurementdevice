@@ -12,3 +12,4 @@ Version History
 * Added Mitutoyo hub component
 * Added conda recipe
 * Upgrade to black 20.8
+* Fix conda package
