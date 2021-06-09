@@ -94,7 +94,7 @@ class PMDCsc(salobj.ConfigurableCsc):
             "telemetry_interval"
         ]
         if config.hub_config[self.index - 1]["hub_type"] == "Mitutoyo":
-            self.component = MitutoyoComponent(self.simulation_mode)
+            self.component = MitutoyoComponent(self.simulation_mode, log=self.log)
         self.component.configure(config.hub_config[self.index - 1])
         self.evt_metadata.set_put(
             hubType=self.component.hub_type,
@@ -106,24 +106,38 @@ class PMDCsc(salobj.ConfigurableCsc):
     async def telemetry(self):
         """Execute the telemetry loop."""
         try:
+            self.log.debug("Begin sending telemetry")
             while True:
-                self.log.debug("Begin sending telemetry")
                 position = self.component.get_slots_position()
+                self.log.debug(
+                    "telemetry_loop received position data, now publishing event"
+                )
                 self.tel_position.set_put(position=position)
+                position = None  # reset so it's easier to debug exceptions
                 await asyncio.sleep(self.telemetry_interval)
         except asyncio.CancelledError:
             self.log.info("Telemetry loop cancelled")
-        except Exception:
-            self.log.exception("Telemetry loop failed")
+        except Exception as e:
+            err_msg = f"Telemetry loop failed. Last position value was {position}"
+            self.log.exception(err_msg)
+            self.fault(2, report=f"{err_msg}: {e}")
 
     async def handle_summary_state(self):
         """Handle the summary states."""
         if self.disabled_or_enabled:
             if not self.component.connected:
-                self.component.connect()
+                try:
+                    self.log.debug("in handle_summary_state: connecting")
+                    self.component.connect()
+                except Exception as e:
+                    self.log.exception(e)
+                    self.fault(1, e.args)
             if self.telemetry_task.done():
                 self.telemetry_task = asyncio.create_task(self.telemetry())
         else:
+            self.log.debug(
+                "in handle_summary_state else: cancelling telemetry and disconnecting"
+            )
             self.telemetry_task.cancel()
             if self.component is not None:
                 self.component.disconnect()
@@ -133,7 +147,8 @@ class PMDCsc(salobj.ConfigurableCsc):
         """Close the CSC for cleanup."""
         await super().close_tasks()
         self.telemetry_task.cancel()
-        self.component.disconnect()
+        if self.component is not None:
+            self.component.disconnect()
 
     @staticmethod
     def get_config_pkg():
