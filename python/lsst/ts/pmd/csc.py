@@ -94,7 +94,7 @@ class PMDCsc(salobj.ConfigurableCsc):
             "telemetry_interval"
         ]
         if config.hub_config[self.index - 1]["hub_type"] == "Mitutoyo":
-            self.component = MitutoyoComponent(self.simulation_mode)
+            self.component = MitutoyoComponent(self.simulation_mode, log=self.log)
         self.component.configure(config.hub_config[self.index - 1])
         self.evt_metadata.set_put(
             hubType=self.component.hub_type,
@@ -115,12 +115,17 @@ class PMDCsc(salobj.ConfigurableCsc):
             self.log.info("Telemetry loop cancelled")
         except Exception:
             self.log.exception("Telemetry loop failed")
+            self.fault(2, "Telemetry loop failed.")
 
     async def handle_summary_state(self):
         """Handle the summary states."""
         if self.disabled_or_enabled:
             if not self.component.connected:
-                self.component.connect()
+                try:
+                    self.component.connect()
+                except Exception as e:
+                    self.log.exception(e)
+                    self.fault(1, e.args)
             if self.telemetry_task.done():
                 self.telemetry_task = asyncio.create_task(self.telemetry())
         else:
@@ -133,7 +138,8 @@ class PMDCsc(salobj.ConfigurableCsc):
         """Close the CSC for cleanup."""
         await super().close_tasks()
         self.telemetry_task.cancel()
-        self.component.disconnect()
+        if self.component is not None:
+            self.component.disconnect()
 
     @staticmethod
     def get_config_pkg():

@@ -24,6 +24,7 @@ __all__ = ["MitutoyoComponent"]
 import math
 import pty
 import os
+import logging
 
 import serial
 
@@ -50,15 +51,23 @@ class MitutoyoComponent:
         Whether the device is connected.
     """
 
-    def __init__(self, simulation_mode):
+    def __init__(self, simulation_mode, log=None):
         self.connected = False
         self.simulation_mode = bool(simulation_mode)
         self.names = ["", "", "", "", "", "", "", ""]
+        if log is None:
+            self.log = logging.getLogger(type(self).__name__)
+        else:
+            self.log = log.getChild(type(self).__name__)
 
     def connect(self):
         """Connect to the device."""
         if not self.simulation_mode:
-            self.commander = serial.Serial(port=SIMULATION_SERIAL_PORT)
+            try:
+                self.commander = serial.Serial(port=self.serial_port)
+            except Exception as e:
+                self.log.exception(e)
+                raise
         else:
             main, reader = pty.openpty()
             self.commander = MockSerial(os.ttyname(main))
@@ -82,6 +91,7 @@ class MitutoyoComponent:
         self.hub_type = config["hub_type"]
         self.units = config["units"]
         self.location = config["location"]
+        self.serial_port = config["serial_port"]
 
     def send_msg(self, msg):
         """Send a message to the device.
@@ -101,8 +111,10 @@ class MitutoyoComponent:
         reply : `bytes`
             The reply from the device.
         """
+        self.log.debug("Start sending message")
         if not self.connected:
             raise Exception("Not connected")
+        self.log.debug(f"{msg}\r".encode())
         self.commander.write(f"{msg}\r".encode())
         try:
             reply = self.commander.read_until(b"\r")
@@ -139,6 +151,7 @@ class MitutoyoComponent:
         for i, name in enumerate(self.names):
             if name == "":
                 continue
+            self.log.debug("reading device")
             reply = self.send_msg(str(i + 1))
             if reply != b"\r":
                 split_reply = reply.decode().split(":")
