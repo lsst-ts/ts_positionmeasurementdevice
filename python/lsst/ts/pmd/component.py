@@ -31,7 +31,7 @@ import serial
 from .mock_server import MockSerial
 
 SIMULATION_SERIAL_PORT = "/dev/ttyUSB0"
-READ_TIMEOUT = 10.0  # [seconds]
+READ_TIMEOUT = 5.0  # [seconds]
 
 
 class MitutoyoComponent:
@@ -170,7 +170,7 @@ class MitutoyoComponent:
             reply = self.send_msg(str(i + 1))
             # an empty reading returns b'', unsure what b"\r" is but was
             # here originally
-            if reply != b"\r" and reply != b"":
+            if reply != b"\r":
                 split_reply = reply.decode().split(":")
                 position[i] = float(split_reply[-1])
             else:
