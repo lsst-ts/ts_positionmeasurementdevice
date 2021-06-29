@@ -127,13 +127,14 @@ class MitutoyoComponent:
         self.log.debug(f"Message to be sent is {msg}")
         self.commander.write(f"{msg}\r".encode())
         self.log.debug("Message written")
-        try:
-            reply = self.commander.read_until(b"\r")
+
+        reply = self.commander.read_until(b"\r")
+        if reply != b"":
             self.log.debug(f"Read successful in send_msg, got {reply}")
             return reply
-        except TimeoutError:
+        else:
             reply = b"\r"
-            self.log.debug(f"Timed out on read in send_msg, returning {reply}")
+            self.log.warning(f"Timed out on read in send_msg, returning {reply}")
             return reply
 
     def get_slots_position(self):
