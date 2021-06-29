@@ -169,7 +169,7 @@ class MitutoyoComponent:
             reply = self.send_msg(str(i + 1))
             # an empty reading returns b'', unsure what b"\r" is but was
             # here originally
-            if reply != b"\r" or reply != b"":
+            if reply != b"\r" and reply != b"":
                 split_reply = reply.decode().split(":")
                 position[i] = float(split_reply[-1])
             else:
