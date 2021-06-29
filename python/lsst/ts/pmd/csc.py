@@ -107,6 +107,7 @@ class PMDCsc(salobj.ConfigurableCsc):
         """Execute the telemetry loop."""
         try:
             self.log.debug("Begin sending telemetry")
+            position = None
             while True:
                 position = self.component.get_slots_position()
                 self.log.debug(

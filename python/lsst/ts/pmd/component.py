@@ -163,10 +163,13 @@ class MitutoyoComponent:
             math.nan,
         ]
         for i, name in enumerate(self.names):
+            # Skip the channels that have nothing configured
             if name == "":
                 continue
             reply = self.send_msg(str(i + 1))
-            if reply != b"\r":
+            # an empty reading returns b'', unsure what b"\r" is but was
+            # here originally
+            if reply != b"\r" or reply != b"":
                 split_reply = reply.decode().split(":")
                 position[i] = float(split_reply[-1])
             else:
