@@ -4,6 +4,10 @@
 Version History
 ===============
 
+v0.2.1
+======
+* Updated unit tests to the use correct configuration file name
+
 v0.2.0
 ======
 * Added log handling over DDS
