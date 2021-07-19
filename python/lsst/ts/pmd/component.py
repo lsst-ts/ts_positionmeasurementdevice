@@ -132,11 +132,10 @@ class MitutoyoComponent:
         # instead of raising a timeout exception
         if reply != b"":
             self.log.debug(f"Read successful in send_msg, got {reply}")
-            return reply
         else:
             reply = b"\r"
             self.log.debug("Channel timed out or empty")
-            return reply
+        return reply
 
     def get_slots_position(self):
         """Get all device slot positions.

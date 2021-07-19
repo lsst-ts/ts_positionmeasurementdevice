@@ -110,7 +110,9 @@ class PMDCsc(salobj.ConfigurableCsc):
             position = None
             loop = asyncio.get_event_loop()
             while True:
-                position = await loop.run_in_executor(None, self.component.get_slots_position)
+                position = await loop.run_in_executor(
+                    None, self.component.get_slots_position
+                )
                 self.log.debug(
                     "telemetry_loop received position data, now publishing event"
                 )
